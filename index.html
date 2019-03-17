@@ -32,7 +32,7 @@
         "pk.eyJ1IjoiZXJpY2tyYW1wIiwiYSI6ImNqdGNjbDZzbTBqaWE0YXFqNjJtcXE3Z3gifQ.6iDwZBO2SI2DAW2XNcI3NQ";
       var map = new mapboxgl.Map({
         container: "map",
-        style: "mapbox://styles/mapbox/light-v9",
+        style: "mapbox://styles/mapbox/outdoors-v10",
         center: [-116.15351, 33.99802],
         zoom: 10
       });
@@ -56,7 +56,16 @@
         // location of the feature, with description HTML from its properties.
         map.on("click", "places", function(e) {
           var coordinates = e.features[0].geometry.coordinates.slice();
-          var description = e.features[0].properties.Route;
+          // var description = e.features[0].properties.Route;
+
+          let description = ""
+          for (let index = 0; index < e.features.length; index++) {
+            const element = e.features[index].properties;
+            description += "<p><strong>" + element.Route + "</strong> </br>";
+            description += "Rating: " + element.Rating + "</p>"; 
+          }
+
+          console.dir(e.features);
 
           // Ensure that if the map is zoomed out such that multiple
           // copies of the feature are visible, the popup appears
