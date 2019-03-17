@@ -1,48 +1,45 @@
 <!DOCTYPE html>
 <html>
-<head>
-<meta charset=utf-8 />
-<title>Single marker</title>
-<meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
-<script src='https://api.mapbox.com/mapbox.js/v3.2.0/mapbox.js'></script>
-<link href='https://api.mapbox.com/mapbox.js/v3.2.0/mapbox.css' rel='stylesheet' />
-<style>
-  body { margin:0; padding:0; }
-  #map { position:absolute; top:0; bottom:0; width:100%; }
-</style>
-</head>
-<body>
-<div id='map'></div>
+  <head>
+    <meta charset="utf-8" />
+    <title>Joshua Tree Bouldering</title>
+    <meta
+      name="viewport"
+      content="initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <script src="https://api.mapbox.com/mapbox.js/v3.2.0/mapbox.js"></script>
+    <link
+      href="https://api.mapbox.com/mapbox.js/v3.2.0/mapbox.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      #map {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
 
-<script>
-L.mapbox.accessToken = 'pk.eyJ1IjoiZXJpY2tyYW1wIiwiYSI6ImNqdGNjbDZzbTBqaWE0YXFqNjJtcXE3Z3gifQ.6iDwZBO2SI2DAW2XNcI3NQ';
-var map = L.mapbox.map('map')
-    .setView([38.91338, -77.03236], 16)
-    .addLayer(L.mapbox.styleLayer('mapbox://styles/mapbox/streets-v11'));
+    <script>
+      L.mapbox.accessToken = "pk.eyJ1IjoiZXJpY2tyYW1wIiwiYSI6ImNqdGNjbDZzbTBqaWE0YXFqNjJtcXE3Z3gifQ.6iDwZBO2SI2DAW2XNcI3NQ";
+      var map = L.mapbox
+        .map("map")
+        .setView([33.99802, -116.15351], 10)
+        .addLayer(L.mapbox.styleLayer("mapbox://styles/mapbox/streets-v11"))
+        // .addSource('routes', { type: 'geojson', data: "file:///Users/erickramp/Desktop/jtree-map/route-finder.geojson"});
 
-L.mapbox.featureLayer({
-    // this feature is in the GeoJSON format: see geojson.org
-    // for the full specification
-    type: 'Feature',
-    geometry: {
-        type: 'Point',
-        // coordinates here are in longitude, latitude order because
-        // x, y is the standard for GeoJSON and many formats
-        coordinates: [
-          -77.03221142292,
-          38.913371603574
-        ]
-    },
-    properties: {
-        title: 'Peregrine Espresso',
-        description: '1718 14th St NW, Washington, DC',
-        // one can customize markers by adding simplestyle properties
-        // https://www.mapbox.com/guides/an-open-platform/#simplestyle
-        'marker-size': 'large',
-        'marker-color': '#BE9A6B',
-        'marker-symbol': 'cafe'
-    }
-}).addTo(map);
-</script>
-</body>
+      // var url = "file:///Users/erickramp/Desktop/jtree-map/route-finder.geojson";
+      // map.on("load", function() {
+      //   map.addSource('routes', { type: 'geojson', data: url});
+      // });
+    </script>
+  </body>
 </html>
