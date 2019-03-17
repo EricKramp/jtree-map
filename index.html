@@ -2,14 +2,14 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>Joshua Tree Bouldering</title>
+    <title>Draw GeoJSON points</title>
     <meta
       name="viewport"
       content="initial-scale=1,maximum-scale=1,user-scalable=no"
     />
-    <script src="https://api.mapbox.com/mapbox.js/v3.2.0/mapbox.js"></script>
+    <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.1/mapbox-gl.js"></script>
     <link
-      href="https://api.mapbox.com/mapbox.js/v3.2.0/mapbox.css"
+      href="https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.1/mapbox-gl.css"
       rel="stylesheet"
     />
     <style>
@@ -27,19 +27,28 @@
   </head>
   <body>
     <div id="map"></div>
-
     <script>
-      L.mapbox.accessToken = "pk.eyJ1IjoiZXJpY2tyYW1wIiwiYSI6ImNqdGNjbDZzbTBqaWE0YXFqNjJtcXE3Z3gifQ.6iDwZBO2SI2DAW2XNcI3NQ";
-      var map = L.mapbox
-        .map("map")
-        .setView([33.99802, -116.15351], 10)
-        .addLayer(L.mapbox.styleLayer("mapbox://styles/mapbox/streets-v11"))
-        // .addSource('routes', { type: 'geojson', data: "file:///Users/erickramp/Desktop/jtree-map/route-finder.geojson"});
+      mapboxgl.accessToken =
+        "pk.eyJ1IjoiZXJpY2tyYW1wIiwiYSI6ImNqdGNjbDZzbTBqaWE0YXFqNjJtcXE3Z3gifQ.6iDwZBO2SI2DAW2XNcI3NQ";
+      var map = new mapboxgl.Map({
+        container: "map",
+        style: "mapbox://styles/mapbox/light-v9",
+        center: [-116.15351, 33.99802],
+        zoom: 10
+      });
 
-      // var url = "file:///Users/erickramp/Desktop/jtree-map/route-finder.geojson";
-      // map.on("load", function() {
-      //   map.addSource('routes', { type: 'geojson', data: url});
-      // });
+      map.on("load", function() {
+        map.addSource("routes", {
+          type: "geojson",
+          data: "route-finder.geojson"
+        });
+
+        map.addLayer({
+          "id": "points",
+          "type": "circle",
+          "source": "routes",
+        });
+      });
     </script>
   </body>
 </html>
