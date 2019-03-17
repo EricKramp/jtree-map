@@ -40,7 +40,7 @@
       map.on("load", function() {
         map.addSource("routes", {
           type: "geojson",
-          data: "route-finder.geojson"
+          data: "route-finder.geojson",
           // cluster: true,
           // clusterMaxZoom: 14,
           // clusterRadius: 50
@@ -49,23 +49,42 @@
         map.addLayer({
           id: "places",
           type: "circle",
-          source: "routes"
+          source: "routes",
+          paint: {
+            "circle-color": "#50E3C2",
+            "circle-stroke-width": 1,
+            "circle-stroke-color": "#4A90E2", 
+            "circle-radius": 10
+          }
+        });
+
+        map.addLayer({
+          id: "places-labels",
+          type: "symbol",
+          source: "routes",
+          // filter: ["has", "point_count"],
+          layout: {
+            "text-field": "{Route}",
+            "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
+            "text-size": 12
+          }
         });
 
         // When a click event occurs on a feature in the places layer, open a popup at the
         // location of the feature, with description HTML from its properties.
         map.on("click", "places", function(e) {
           var coordinates = e.features[0].geometry.coordinates.slice();
-          // var description = e.features[0].properties.Route;
+          let description = "";
 
-          let description = ""
           for (let index = 0; index < e.features.length; index++) {
             const element = e.features[index].properties;
             description += "<p><strong>" + element.Route + "</strong> </br>";
-            description += "Rating: " + element.Rating + "</p>"; 
+            description += "Rating: " + element.Rating + "</br>"; 
+            description += "<a href='" + element.URL + "'>Link</a>";
+            description += "</p>";
           }
 
-          console.dir(e.features);
+          console.dir(e);
 
           // Ensure that if the map is zoomed out such that multiple
           // copies of the feature are visible, the popup appears
