@@ -40,7 +40,7 @@
       map.on("load", function() {
         map.addSource("routes", {
           type: "geojson",
-          data: "route-finder.geojson",
+          data: "route-finder.geojson"
           // cluster: true,
           // clusterMaxZoom: 14,
           // clusterRadius: 50
@@ -53,22 +53,22 @@
           paint: {
             "circle-color": "#50E3C2",
             "circle-stroke-width": 1,
-            "circle-stroke-color": "#4A90E2", 
+            "circle-stroke-color": "#4A90E2",
             "circle-radius": 10
           }
         });
 
         map.addLayer({
-          id: "places-labels",
-          type: "symbol",
-          source: "routes",
-          // filter: ["has", "point_count"],
-          layout: {
-            "text-field": "{Route}",
-            "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
-            "text-size": 12
-          }
-        });
+            id: "places-labels",
+            type: "symbol",
+            source: "routes",
+            // filter: ["has", "point_count"],
+            layout: {
+              "text-field": "{Route}",
+              "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
+              "text-size": 12
+            }
+          });
 
         // When a click event occurs on a feature in the places layer, open a popup at the
         // location of the feature, with description HTML from its properties.
@@ -79,7 +79,7 @@
           for (let index = 0; index < e.features.length; index++) {
             const element = e.features[index].properties;
             description += "<p><strong>" + element.Route + "</strong> </br>";
-            description += "Rating: " + element.Rating + "</br>"; 
+            description += "Rating: " + element.Rating + "</br>";
             description += "<a href='" + element.URL + "'>Link</a>";
             description += "</p>";
           }
