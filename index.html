@@ -44,7 +44,9 @@
         border-radius: 3px;
         width: 120px;
         border: 1px solid rgba(0, 0, 0, 0.4);
-        font-family: "Open Sans", sans-serif;
+        font-family: sans-serif;
+        padding: 0.25em;
+        text-align: center;
       }
 
       #menu a {
@@ -68,8 +70,13 @@
         color: #404040;
       }
 
-      #menu a.active {
-        background-color: #3887be;
+      #menu a.active.boulder {
+        background-color: #50E3C2;
+        color: #ffffff;
+      }
+
+      #menu a.active.sport {
+        background-color: #F5A623;
         color: #ffffff;
       }
 
@@ -80,9 +87,11 @@
   </head>
   <body>
     <div id="map"></div>
-    <nav id="menu"></nav>
+    <nav id="menu">
+      <p>Toggle Layers</p>
+    </nav>
     <div id="title">
-      <!-- <h1>Boulder Problems: V-Easy - V4</h1> -->
+      <h1>Boulder Problems & TR/Sport</h1>
     </div>
     <script>
       mapboxgl.accessToken =
@@ -102,7 +111,7 @@
         });
 
         map.addLayer({
-          id: "places",
+          id: "boulder-places",
           type: "circle",
           source: "bouldering",
           paint: {
@@ -113,14 +122,24 @@
           }
         });
 
-        // load & draw circles for top roping
+        map.addLayer({
+          id: "boulder-labels",
+          type: "symbol",
+          source: "bouldering",
+          layout: {
+            "text-field": "{Route}",
+            "text-size": 12
+          }
+        });
+
+        // load & draw circles for sport
         map.addSource("sport", {
           type: "geojson",
-          data: "routes-sport-7-11c.geojson"
+          data: "sport-7-11c.geojson"
         });
 
         map.addLayer({
-          id: "sport",
+          id: "sport-places",
           type: "circle",
           source: "sport",
           paint: {
@@ -132,9 +151,9 @@
         });
 
         map.addLayer({
-          id: "places-labels",
+          id: "sport-labels",
           type: "symbol",
-          source: "bouldering",
+          source: "sport",
           layout: {
             "text-field": "{Route}",
             "text-size": 12
@@ -143,7 +162,15 @@
 
         // When a click event occurs on a feature in the places layer, open a popup at the
         // location of the feature, with description HTML from its properties.
-        map.on("click", "places", function(e) {
+        map.on("click", "boulder-places", function(e) {
+          handleClick(e);
+        });
+
+        map.on("click", "sport-places", function(e) {
+          handleClick(e);
+        });
+
+        function handleClick(e) {
           var coordinates = e.features[0].geometry.coordinates.slice();
           let description = "";
 
@@ -155,7 +182,7 @@
             description += "</p>";
           }
 
-          console.dir(e);
+          // console.dir(e);
 
           // Ensure that if the map is zoomed out such that multiple
           // copies of the feature are visible, the popup appears
@@ -168,31 +195,45 @@
             .setLngLat(coordinates)
             .setHTML(description)
             .addTo(map);
-        });
+        }
 
         // Change the cursor to a pointer when the mouse is over the places layer.
-        map.on("mouseenter", "places", function() {
+        map.on("mouseenter", "boulder-places", function() {
+          map.getCanvas().style.cursor = "pointer";
+        });
+
+        map.on("mouseenter", "sport-places", function() {
           map.getCanvas().style.cursor = "pointer";
         });
 
         // Change it back to a pointer when it leaves.
-        map.on("mouseleave", "places", function() {
+        map.on("mouseleave", "boulder-places", function() {
+          map.getCanvas().style.cursor = "";
+        });
+
+        map.on("mouseleave", "sport-places", function() {
           map.getCanvas().style.cursor = "";
         });
       });
 
-      var toggleableLayerIds = ["Bouldering (V-Easy - V4)", "Sport & TR (5.7-5.11b/c)"];
+      var toggleableLayerIds = [
+        "Bouldering (V-Easy - V4)",
+        "Sport & TR (5.7-5.11b/c)"
+      ];
 
       for (var i = 0; i < toggleableLayerIds.length; i++) {
         var id = toggleableLayerIds[i];
 
         var link = document.createElement("a");
         link.href = "#";
-        link.className = "active";
+        var climbType = id.includes("Bouldering") ? "boulder" : "sport";
+        link.className = climbType + " active";
         link.textContent = id;
 
         link.onclick = function(e) {
-          var clickedLayer = this.textContent;
+          var clickedLayerBase = this.textContent.includes("Bouldering") ? "boulder" : "sport";
+          var clickedLayer = clickedLayerBase + "-places";
+          var clickedLayerLabels = clickedLayerBase + "-labels"
           e.preventDefault();
           e.stopPropagation();
 
@@ -200,10 +241,12 @@
 
           if (visibility === "visible") {
             map.setLayoutProperty(clickedLayer, "visibility", "none");
-            this.className = "";
+            map.setLayoutProperty(clickedLayerLabels, "visibility", "none");
+            this.className = clickedLayerBase;
           } else {
-            this.className = "active";
+            this.className = clickedLayerBase + " active";
             map.setLayoutProperty(clickedLayer, "visibility", "visible");
+            map.setLayoutProperty(clickedLayerLabels, "visibility", "visible");
           }
         };
 
