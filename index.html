@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>Joshua Tree Maps</title>
+    <title>Joshua Tree Climbing Map</title>
     <meta
       name="viewport"
       content="initial-scale=1,maximum-scale=1,user-scalable=no"
@@ -16,11 +16,16 @@
       body {
         margin: 0;
         padding: 0;
-        font-family: sans-serif;
+        font-family: "Helvetica", sans-serif;
       }
       #title {
         position: absolute;
-        top: 0;
+        top: 10px;
+        left: calc(50% - 132px);
+        width: 264px;
+        padding: 1px 9px;
+        border: 1px solid rgba(0, 0, 0, 0.4);
+        border-radius: 3px;
         background-color: white;
         color: black;
       }
@@ -28,6 +33,7 @@
         font-size: 1.25em;
         padding: 0.25em;
         margin: 0;
+        text-align: center;
       }
       #map {
         position: absolute;
@@ -39,14 +45,17 @@
         background: #fff;
         position: absolute;
         z-index: 1;
-        top: 50px;
+        top: 10px;
         left: 10px;
         border-radius: 3px;
-        width: 120px;
+        width: 166px;
         border: 1px solid rgba(0, 0, 0, 0.4);
         font-family: sans-serif;
         padding: 0.25em;
-        text-align: center;
+      }
+
+      #menu p {
+        margin: 8px;
       }
 
       #menu a {
@@ -58,7 +67,7 @@
         padding: 10px;
         text-decoration: none;
         border-bottom: 1px solid rgba(0, 0, 0, 0.25);
-        text-align: center;
+        /* text-align: center; */
       }
 
       #menu a:last-child {
@@ -71,17 +80,22 @@
       }
 
       #menu a.active.boulder {
-        background-color: #50E3C2;
+        background-color: #4A90E2;
+        font-weight: 500;
         color: #ffffff;
+      }
+      #menu a.active.boulder:hover {
+        background: #3e97fd;
       }
 
       #menu a.active.sport {
-        background-color: #F5A623;
+        background-color: #9013FE;
+        font-weight: 500;
         color: #ffffff;
       }
 
-      #menu a.active:hover {
-        background: #3074a4;
+      #menu a.active.sport:hover {
+        background: #a139fc;
       }
     </style>
   </head>
@@ -91,17 +105,24 @@
       <p>Toggle Layers</p>
     </nav>
     <div id="title">
-      <h1>Boulder Problems & TR/Sport</h1>
+      <h1>Joshua Tree Routes Map</h1>
     </div>
     <script>
       mapboxgl.accessToken =
         "pk.eyJ1IjoiZXJpY2tyYW1wIiwiYSI6ImNqdGNjbDZzbTBqaWE0YXFqNjJtcXE3Z3gifQ.6iDwZBO2SI2DAW2XNcI3NQ";
       var map = new mapboxgl.Map({
         container: "map",
-        style: "mapbox://styles/mapbox/outdoors-v10",
+        style: "mapbox://styles/mapbox/outdoors-v11",
         center: [-116.15351, 33.99802],
         zoom: 10
       });
+
+      var textPaint = {
+        "text-halo-width": 2,
+        "text-halo-color": "white"
+      };
+
+      var dotSize = 5;
 
       map.on("load", function() {
         // load & draw bouldering locations
@@ -115,10 +136,10 @@
           type: "circle",
           source: "bouldering",
           paint: {
-            "circle-color": "#50E3C2",
-            "circle-stroke-width": 1,
+            "circle-color": "#4A90E2",
+            "circle-stroke-width": 0,
             "circle-stroke-color": "#4A90E2",
-            "circle-radius": 10
+            "circle-radius": dotSize
           }
         });
 
@@ -129,7 +150,8 @@
           layout: {
             "text-field": "{Route}",
             "text-size": 12
-          }
+          },
+          paint: textPaint
         });
 
         // load & draw circles for sport
@@ -143,10 +165,10 @@
           type: "circle",
           source: "sport",
           paint: {
-            "circle-color": "#F5A623",
-            "circle-stroke-width": 1,
+            "circle-color": "#9013FE",
+            "circle-stroke-width": 0,
             "circle-stroke-color": "#D0021B",
-            "circle-radius": 10
+            "circle-radius": dotSize
           }
         });
 
@@ -157,7 +179,8 @@
           layout: {
             "text-field": "{Route}",
             "text-size": 12
-          }
+          },
+          paint: textPaint
         });
 
         // When a click event occurs on a feature in the places layer, open a popup at the
